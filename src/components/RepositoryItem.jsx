@@ -1,0 +1,78 @@
+import React from 'react';
+import { Image, View, Dimensions, StyleSheet } from 'react-native';
+import theme from '../theme';
+import Text from './Text';
+
+const parseThousand = (num) => {
+    num /= 1000;
+    let returnString = "";
+    let afterDot = false;
+    let i=0;
+    let str = num.toString();
+    
+    while(!afterDot) {
+        if(i < str.length) {
+            if(str[i] != '.')
+                returnString += str[i];
+            else
+                afterDot = true;
+            i++;
+        }
+        else {
+            afterDot = true;
+        }
+    }
+    if(afterDot && i < str.length)
+        returnString += '.' + str[i];
+
+    console.log(returnString);
+    return returnString + 'k';
+};
+
+const RepositoryItem = ({ item }) => {
+    const styles = StyleSheet.create({
+        infoContainer: {
+            padding: 15,
+            textAlign: 'center'
+        },
+      });
+    let width = Dimensions.get('window').width;
+    let starCount = (item.stargazersCount > 1000) ? parseThousand(item.stargazersCount) : item.stargazersCount;
+    let forksCount = (item.forksCount > 1000) ? parseThousand(item.forksCount) : item.forksCount;
+    return (
+        <View style={theme.cardStyle}>
+            <View style={ { flexDirection: 'row' } }>
+                <View style={ { padding: 15 } }>
+                    <Image style={ { height: width * 0.075, width: width * 0.075 } } source={ { uri: item.ownerAvatarUrl } } />
+                </View>
+               <View style={{ justifyContent: 'center' }}>
+                    <Text fontWeight='bold' fontSize='subheading'>{item.fullName}</Text>
+                    <Text>{item.description}</Text>
+                    <View style={{ alignSelf: 'flex-start' }}>
+                        <Text style={ { backgroundColor: theme.colors.primary, padding: 5, margin: 5, color: theme.colors.white }}>{item.language}</Text>
+                    </View>
+                </View>
+            </View>
+            <View style={ { flexDirection: 'row' } }>
+                <View style={styles.infoContainer}>
+                    <Text>{starCount}</Text>
+                    <Text fontWeight='bold'>Stars</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    <Text>{forksCount}</Text>
+                    <Text fontWeight='bold'>Forks</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    <Text>{item.reviewCount}</Text>
+                    <Text fontWeight='bold'>Reviews</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    <Text>{item.ratingAverage}</Text>  
+                    <Text fontWeight='bold'>Rating</Text>
+                </View>
+            </View>          
+        </View>
+    );
+};
+
+export default RepositoryItem;
