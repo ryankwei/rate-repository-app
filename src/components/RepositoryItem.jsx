@@ -25,7 +25,6 @@ const parseThousand = (num) => {
     if(afterDot && i < str.length)
         returnString += '.' + str[i];
 
-    console.log(returnString);
     return returnString + 'k';
 };
 
@@ -46,7 +45,7 @@ const RepositoryItem = ({ item }) => {
                     <Image style={ { height: width * 0.075, width: width * 0.075 } } source={ { uri: item.ownerAvatarUrl } } />
                 </View>
                <View style={{ justifyContent: 'center' }}>
-                    <Text fontWeight='bold' fontSize='subheading'>{item.fullName}</Text>
+                    <Text fontWeight='bold' fontSize='subheading' testID="repositoryItemTitle">{item.fullName}</Text>
                     <Text>{item.description}</Text>
                     <View style={{ alignSelf: 'flex-start' }}>
                         <Text style={ { backgroundColor: theme.colors.primary, padding: 5, margin: 5, color: theme.colors.white }}>{item.language}</Text>

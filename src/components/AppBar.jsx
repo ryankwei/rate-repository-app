@@ -1,8 +1,11 @@
-import React from 'react';
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import React, { useContext } from 'react';
+import { View, StyleSheet, Text, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import Constants from 'expo-constants';
 import theme from '../theme';
 import { Link } from 'react-router-native';
+import useAuthorizedUser from '../hooks/useAuthorizedUser';
+import AuthStorageContext from '../contexts/AuthStorageContext';
+import { useApolloClient } from '@apollo/client';
 const styles = StyleSheet.create({
   container: {
     paddingTop: Constants.statusBarHeight + 15,
@@ -22,15 +25,31 @@ const AppBar = () => {
   //     Repositories</Text>
   //   </TouchableWithoutFeedback>
   // </View>);
+  const apolloClient = useApolloClient();
+  const authStorage = useContext(AuthStorageContext);
+  const signOut = async (e) => {
+    e.preventDefault();
+    await authStorage.removeAccessToken();
+    apolloClient.resetStore();
+  };
+  const authorizedUser = useAuthorizedUser();
+  console.log(authorizedUser);
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
           <Link to="/" style={ { padding: 10 } }>
             <Text style={ { color: theme.colors.white }}>Repositories</Text>
           </Link>
-          <Link to="/SignIn" style={ { padding: 10 } }>
+          {authorizedUser.user == null && <Link to="/SignIn" style={ { padding: 10 } }>
             <Text style={ { color: theme.colors.white }}>Sign In</Text>
-          </Link>
+          </Link>}
+          {authorizedUser.user != null && 
+          <View style={ { padding: 10 } }>
+            <TouchableWithoutFeedback onPress={signOut}>
+                <Text style={ { color: theme.colors.white }}>Sign Out</Text>
+            </TouchableWithoutFeedback>
+          </View>
+          }
       </ScrollView>
     </View>
   );

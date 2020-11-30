@@ -1,10 +1,11 @@
 import React from 'react';
+import { useHistory } from 'react-router-native';
 import { View } from 'react-native';
 import theme from '../theme';
 import { Formik } from 'formik';
 import SignInForm from './SignInForm';
 import * as yup from 'yup';
-
+import { useSignIn } from '../hooks/useSignIn';
 const validationSchema = yup.object().shape({
   username: yup
     .string()
@@ -15,8 +16,17 @@ const validationSchema = yup.object().shape({
 });
 
 const SignIn = () => {
-  const onSubmit = (values) => {
+  const [signIn] = useSignIn();
+  const history = useHistory();
+  const onSubmit = async (values) => {
     console.log(values);
+    const { username, password } = values;
+    try {
+      await signIn({ username, password });
+      history.push("/");
+    } catch(e) {
+      console.log(e);
+    }
   };
 
   const initialValues={
