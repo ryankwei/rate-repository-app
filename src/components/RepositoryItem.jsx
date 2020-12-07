@@ -1,8 +1,8 @@
 import React from 'react';
-import { Image, View, Dimensions, StyleSheet } from 'react-native';
+import { Image, View, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import theme from '../theme';
 import Text from './Text';
-
+import * as Linking from 'expo-linking';
 const parseThousand = (num) => {
     num /= 1000;
     let returnString = "";
@@ -28,7 +28,8 @@ const parseThousand = (num) => {
     return returnString + 'k';
 };
 
-const RepositoryItem = ({ item }) => {
+const RepositoryItem = ({ item, showGithub }) => {
+    
     const styles = StyleSheet.create({
         infoContainer: {
             padding: 15,
@@ -38,6 +39,9 @@ const RepositoryItem = ({ item }) => {
     let width = Dimensions.get('window').width;
     let starCount = (item.stargazersCount > 1000) ? parseThousand(item.stargazersCount) : item.stargazersCount;
     let forksCount = (item.forksCount > 1000) ? parseThousand(item.forksCount) : item.forksCount;
+    const toGithub = () => {
+        Linking.openURL(item.url);
+    };
     return (
         <View style={theme.cardStyle}>
             <View style={ { flexDirection: 'row' } }>
@@ -46,7 +50,7 @@ const RepositoryItem = ({ item }) => {
                 </View>
                <View style={{ justifyContent: 'center' }}>
                     <Text fontWeight='bold' fontSize='subheading' testID="repositoryItemTitle">{item.fullName}</Text>
-                    <Text>{item.description}</Text>
+                    <Text color='textSecondary'>{item.description}</Text>
                     <View style={{ alignSelf: 'flex-start' }}>
                         <Text style={ { backgroundColor: theme.colors.primary, padding: 5, margin: 5, color: theme.colors.white }}>{item.language}</Text>
                     </View>
@@ -69,7 +73,14 @@ const RepositoryItem = ({ item }) => {
                     <Text>{item.ratingAverage}</Text>  
                     <Text fontWeight='bold'>Rating</Text>
                 </View>
-            </View>          
+            </View> 
+            {showGithub && 
+                <View style={[{ backgroundColor: theme.colors.primary }, theme.formSpacing]}>
+                    <TouchableWithoutFeedback testID="signInSubmit" onPress={toGithub}>
+                    <Text style={ { color: theme.colors.white, textAlign: 'center' } }>Open in Github</Text>
+                    </TouchableWithoutFeedback>
+                </View>
+            }         
         </View>
     );
 };

@@ -40,9 +40,25 @@ const AppBar = () => {
           <Link to="/" style={ { padding: 10 } }>
             <Text style={ { color: theme.colors.white }}>Repositories</Text>
           </Link>
-          {authorizedUser.user == null && <Link to="/SignIn" style={ { padding: 10 } }>
-            <Text style={ { color: theme.colors.white }}>Sign In</Text>
-          </Link>}
+          <Link to="/review" style={ { padding: 10 } }>
+            <Text style={ { color: theme.colors.white }}>Create a review</Text>
+          </Link>          
+          {authorizedUser.user == null && 
+            <Link to="/SignIn" style={ { padding: 10 } }>
+              <Text style={ { color: theme.colors.white } }>Sign In</Text>
+            </Link>
+          }
+          {authorizedUser.user == null &&  
+            <Link to="/SignUp" style={ { padding: 10 } }>
+              <Text style={ { color: theme.colors.white } }>Sign Up</Text>
+            </Link>
+          }
+          {
+            authorizedUser.user != null &&
+            <Link to="/reviews" style={{ padding: 10 }}>
+              <Text style={{ color: theme.colors.white }}>My reviews</Text>
+            </Link>
+          }
           {authorizedUser.user != null && 
           <View style={ { padding: 10 } }>
             <TouchableWithoutFeedback onPress={signOut}>
